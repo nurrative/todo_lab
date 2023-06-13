@@ -2,7 +2,7 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher import FSMContext
 import asyncio
-
+from decouple import config
 class TodoBot:
     def __init__(self, token):
         self.bot = Bot(token=token)
@@ -97,8 +97,7 @@ class TodoBot:
         await self.dp.start_polling(reset_webhook=True)
 
 
-
 if __name__ == '__main__':
-    bot_token = "6047968958:AAGpgxqBfzhtzzVwGam7mrmNsmXxtmvsBsA"
+    bot_token = config('TOKEN')
     todo_bot = TodoBot(bot_token)
     asyncio.run(todo_bot.start())
