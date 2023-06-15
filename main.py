@@ -8,7 +8,7 @@ class TodoBot:
         self.bot = Bot(token=token)
         self.storage = MemoryStorage()
         self.dp = Dispatcher(self.bot, storage=self.storage)
-        self.dp.register_message_handler(self.cmd_start, commands=["start"])
+        self.dp.register_message_handler(self.show_menu, commands=["start", "menu"])
         self.dp.register_message_handler(self.cmd_add, commands=["add"])
         self.dp.register_message_handler(self.cmd_list, commands=["list"])
         self.dp.register_message_handler(self.cmd_update, commands=["update"])
@@ -19,6 +19,21 @@ class TodoBot:
     async def cmd_start(self, message: types.Message, state: FSMContext):
         await message.reply("Привет! Я TODO-бот. Чем я могу тебе помочь?")
         await state.finish()
+
+    async def show_menu(self, message: types.Message):
+        menu_text = "Выберите действие:"
+        menu_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
+        menu_keyboard.add(
+            types.KeyboardButton("/add"),
+            types.KeyboardButton("/list"),
+        )
+        menu_keyboard.add(
+            types.KeyboardButton("/update"),
+            types.KeyboardButton("/delete"),
+        )
+        menu_keyboard.add(types.KeyboardButton("/menu"))
+
+        await message.reply(menu_text, reply_markup=menu_keyboard)
 
     async def cmd_add(self, message: types.Message):
         await message.reply("Введите новую задачу:")
@@ -95,7 +110,6 @@ class TodoBot:
 
     async def start(self):
         await self.dp.start_polling(reset_webhook=True)
-
 
 if __name__ == '__main__':
     bot_token = config('TOKEN')
