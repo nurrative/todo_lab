@@ -111,6 +111,7 @@ class TodoBot:
     async def start(self):
         await self.dp.start_polling(reset_webhook=True)
 
+
 if __name__ == '__main__':
     bot_token = config('TOKEN')
     todo_bot = TodoBot(bot_token)
